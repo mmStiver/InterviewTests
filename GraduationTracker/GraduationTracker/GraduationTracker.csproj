@@ -41,15 +41,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\DataStore.cs" />
+    <Compile Include="Interface\IStudentRepository.cs" />
+    <Compile Include="Interface\IDiplomaRepository.cs" />
+    <Compile Include="Interface\IRequirementRepository.cs" />
+    <Compile Include="Interface\IRepository.cs" />
     <Compile Include="Model\Course.cs" />
     <Compile Include="Model\Diploma.cs" />
     <Compile Include="GraduationTracker.cs" />
-    <Compile Include="Model\STANDING.cs" />
+    <Compile Include="STANDING.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Interface\IRepository.cs" />
-    <Compile Include="Repository\Repository.cs" />
+    <Compile Include="Repository\StudentRepository.cs" />
+    <Compile Include="Repository\RequirementRepository.cs" />
+    <Compile Include="Repository\DiplomaRepository.cs" />
     <Compile Include="Model\Requirement.cs" />
     <Compile Include="Model\Student.cs" />
+    <Compile Include="AcademicOutcome.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

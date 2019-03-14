@@ -9,9 +9,7 @@ using GraduationTracker.Model;
 
 namespace GraduationTracker.Interface
 {
-	public interface IRepository<TEntity>
-			where TEntity : class
+	public interface IDiplomaRepository : IRepository<Diploma>
 	{
-		TEntity Get(int id);
 	}
 }

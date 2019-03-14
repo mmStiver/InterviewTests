@@ -4,72 +4,42 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using GraduationTracker;
 using GraduationTracker.Interface;
 using GraduationTracker.Model;
+using GraduationTracker.Repository;
 
 namespace GraduationTracker
 {
     public partial class GraduationTracker
-    {   
-		private IRepository repository;
+	{   
+		IRequirementRepository requirementRepository;
 
 		public GraduationTracker()
 		{
-			this.repository = new Repository(new Data.DataStore());
+			var datacontext = new Data.DataStore();
+			this.requirementRepository = new RequirementRepository(datacontext);
 		}
 
-        public Tuple<bool, STANDING>  HasGraduated(Diploma diploma, Student student)
+        public AcademicOutcome HasGraduated(Diploma diploma, Student student)
         {
-            var credits = 0;
+            var earnedCredits = 0;
             var average = 0;
         
-            for(int i = 0; i < diploma.Requirements.Length; i++)
-            {
-                for(int j = 0; j < student.Courses.Length; j++)
-                {
-                    var requirement = repository.GetRequirement(diploma.Requirements[i]);
+			var requirements = requirementRepository.GetRequirementByDiploma(diploma);
 
-                    for (int k = 0; k < requirement.Courses.Length; k++)
-                    {
-                        if (requirement.Courses[k] == student.Courses[j].Id)
-                        {
-                            average += student.Courses[j].Mark;
-                            if (student.Courses[j].Mark > requirement.MinimumMark)
-                            {
-                                credits += requirement.Credits;
-                            }
-                        }
-                    }
-                }
-            }
+			earnedCredits = student.Courses
+				.Join(requirements, 
+					course => course.Id, 
+					req => req.Courses.First(), 
+					(course, req) => new { Passed = course.Mark >= req.MinimumMark, Credits = req.Credits } )
+				.Where(course => course.Passed)
+				.Select(course => course.Credits)
+				.Sum();
 
-            average = average / student.Courses.Length;
+			average = student.Courses.Select(c => c.Mark).Sum() / student.Courses.Length;
 
-            var standing = STANDING.None;
-
-            if (average < 50)
-                standing = STANDING.Remedial;
-            else if (average < 80)
-                standing = STANDING.Average;
-            else if (average < 95)
-                standing = STANDING.SumaCumLaude;
-            else
-                standing = STANDING.MagnaCumLaude;
-
-            switch (standing)
-            {
-                case STANDING.Remedial:
-                    return new Tuple<bool, STANDING>(false, standing);
-                case STANDING.Average:
-                    return new Tuple<bool, STANDING>(true, standing);
-                case STANDING.SumaCumLaude:
-                    return new Tuple<bool, STANDING>(true, standing);
-                case STANDING.MagnaCumLaude:
-                    return new Tuple<bool, STANDING>(true, standing);
-
-                default:
-                    return new Tuple<bool, STANDING>(false, standing);
-            } 
+			return new AcademicOutcome(average, (diploma.Credits <= earnedCredits) );
         }
     }
 }
