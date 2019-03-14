@@ -48,8 +48,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GraduationTrackerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="GraduationTrackerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
