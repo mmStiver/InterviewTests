@@ -3,24 +3,56 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Linq;
 
+using GraduationTracker.Model;
+
 namespace GraduationTracker.Tests.Unit
 {
 	[TestClass]
 	public class GraduationTrackerTests
 	{
-		[TestMethod]
-		public void HasGraduated_AllStudentsProcessed_AllResultsRetrnedTest()
-		{
-			var tracker = new GraduationTracker();
+		protected Diploma diploma;
+		protected Student[] students;
 
-			var diploma = new Diploma
+		
+
+		[TestMethod]
+		public void HasGraduated_AllStudentsProcessed_AllStudentsPassedTest()
+		{
+			var diploma = CreateDiploma();
+			var students = CreateStudents();
+
+			var tracker = CreateGraduationTracker();
+
+			
+			var graduated = new List<Tuple<bool, STANDING>>();
+
+			foreach (var student in students)
+			{
+				graduated.Add(tracker.HasGraduated(diploma, student));
+			}
+
+			// assert false when a student has failed?
+			Assert.IsFalse(graduated.All( g => g.Item1));
+
+		}
+
+		#region Setup
+		private GraduationTracker CreateGraduationTracker()
+		{
+			return new GraduationTracker();
+		}
+		private Diploma CreateDiploma()
+		{
+			return new Diploma
 			{
 				Id = 1,
 				Credits = 4,
 				Requirements = new int[] { 100, 102, 103, 104 }
 			};
-
-			var students = new[]
+		}
+		private Student[] CreateStudents()
+		{
+			return new[]
 			{
 			   new Student
 			   {
@@ -66,20 +98,8 @@ namespace GraduationTracker.Tests.Unit
 					new Course{Id = 4, Name = "Physichal Education", Mark=40 }
 				}
 			}
-
-				//tracker.HasGraduated()
 			};
-
-			var graduated = new List<Tuple<bool, STANDING>>();
-
-			foreach (var student in students)
-			{
-				graduated.Add(tracker.HasGraduated(diploma, student));
-			}
-
-			// assert false when a student has failed?
-			Assert.IsFalse(graduated.All( g => g.Item1));
-
 		}
+		#endregion
 	}
 }
