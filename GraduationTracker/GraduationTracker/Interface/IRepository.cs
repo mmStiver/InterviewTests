@@ -15,6 +15,6 @@ namespace GraduationTracker.Interface
         Diploma GetDiploma(int id);
 
         Requirement GetRequirement(int id);
-		
+
 	}
 }

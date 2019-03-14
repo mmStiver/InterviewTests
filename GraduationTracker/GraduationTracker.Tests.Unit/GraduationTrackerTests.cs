@@ -13,10 +13,80 @@ namespace GraduationTracker.Tests.Unit
 		protected Diploma diploma;
 		protected Student[] students;
 
-		
+		[TestMethod]
+		public void HasGraduated_StudentWith40Average_RemedialResultTest()
+		{
+			var diploma = CreateDiploma();
+			var student = CreateStudents().Where( s => s.Id == 4).FirstOrDefault();
+
+			var tracker = CreateGraduationTracker();
+
+			// assert false when a student has failed?
+			Assert.IsFalse(tracker.HasGraduated(diploma, student).Item1);
+			Assert.IsTrue(tracker.HasGraduated(diploma, student).Item2 == STANDING.Remedial);
+
+		}
 
 		[TestMethod]
-		public void HasGraduated_AllStudentsProcessed_AllStudentsPassedTest()
+		public void HasGraduated_StudentWith50Average_AverageStudentTest()
+		{
+			var diploma = CreateDiploma();
+			var student = CreateStudents().Where(s => s.Id == 3).FirstOrDefault();
+
+			var tracker = CreateGraduationTracker();
+
+			// assert false when a student has failed?
+			Assert.IsTrue(tracker.HasGraduated(diploma, student).Item1);
+			Assert.IsTrue(tracker.HasGraduated(diploma, student).Item2 == STANDING.Average);
+
+		}
+
+		[TestMethod]
+		public void HasGraduated_StudentWith80Average_SumaCumLaudeTest()
+		{
+			var diploma = CreateDiploma();
+			var student = CreateStudents().Where(s => s.Id == 2).FirstOrDefault();
+
+			var tracker = CreateGraduationTracker();
+			// assert false when a student has failed?
+			Assert.IsTrue(tracker.HasGraduated(diploma, student).Item1);
+			Assert.IsTrue(tracker.HasGraduated(diploma, student).Item2 == STANDING.SumaCumLaude);
+
+		}
+
+		[TestMethod]
+		public void HasGraduated_StudentWith95Average_MagnaCumLaudeTest()
+		{
+			var diploma = CreateDiploma();
+			var student = CreateStudents().Where(s => s.Id == 1).FirstOrDefault();
+
+			var tracker = CreateGraduationTracker();
+
+			// assert false when a student has failed?
+			Assert.IsTrue(tracker.HasGraduated(diploma, student).Item1);
+			Assert.IsTrue(tracker.HasGraduated(diploma, student).Item2 == STANDING.MagnaCumLaude);
+
+		}
+
+		[TestMethod]
+		public void HasGraduated_PAssingStudentsProcessed_AllStudentsReturnedTest()
+		{
+			var diploma = CreateDiploma();
+			var students = CreateStudents().Where(s => s.Id != 4);
+			var tracker = CreateGraduationTracker();
+			var graduated = new List<Tuple<bool, STANDING>>();
+
+			foreach (var student in students)
+			{
+				graduated.Add(tracker.HasGraduated(diploma, student));
+			}
+
+			// assert false when if student has failed?
+			Assert.IsTrue(graduated.All(g => g.Item1));
+		}
+
+		[TestMethod]
+		public void HasGraduated_AllStudentsProcessed_AllStudentsReturnedTest()
 		{
 			var diploma = CreateDiploma();
 			var students = CreateStudents();
@@ -33,7 +103,6 @@ namespace GraduationTracker.Tests.Unit
 
 			// assert false when a student has failed?
 			Assert.IsFalse(graduated.All( g => g.Item1));
-
 		}
 
 		#region Setup

@@ -8,6 +8,10 @@ using GraduationTracker.Model;
 
 namespace GraduationTracker.Data
 {
+
+	/// <summary>
+	/// Mock datastore used in place of a persistent data backend.
+	/// </summary>
 	public class DataStore
 	{
 		public Diploma[] GetDiplomas()
