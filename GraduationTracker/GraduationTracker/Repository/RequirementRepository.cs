@@ -23,16 +23,7 @@ namespace GraduationTracker.Repository
         public Requirement Get(int id)
         {
             var requirements = _context.GetRequirements();
-            Requirement requirement = null;
-
-            for (int i = 0; i < requirements.Length; i++)
-            {
-                if (id == requirements[i].Id)
-                {
-                    requirement = requirements[i];
-                }
-            }
-            return requirement;
+            return requirements.FirstOrDefault( r => r.Id == id);
         }
 		
 		/// <summary>

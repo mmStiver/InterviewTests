@@ -23,16 +23,7 @@ namespace GraduationTracker.Repository
 		public Diploma Get(int id)
         {
             var diplomas = _context.GetDiplomas();
-            Diploma diploma = null;
-
-            for (int i = 0; i < diplomas.Length; i++)
-            {
-                if (id == diplomas[i].Id)
-                {
-                    diploma = diplomas[i];
-                }
-            }
-            return diploma;
+            return diplomas.FirstOrDefault(d => d.Id == id);
 
         }
 	

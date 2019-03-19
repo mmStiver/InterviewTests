@@ -23,16 +23,7 @@ namespace GraduationTracker.Repository
         public Student Get(int id)
         {
             var students = _context.GetStudents();
-            Student student = null;
-
-            for (int i = 0; i < students.Length; i++)
-            {
-                if (id == students[i].Id)
-                {
-                    student = students[i];
-                }
-            }
-            return student;
+            return students.FirstOrDefault(s => s.Id == id);
         }
 	}
 }
